@@ -5,31 +5,22 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   </head>
   <body>
-    <div ng-controller="myController as ctrl">
-        <p ng-repeat="item in ctrl.arr">{{item}}</p>
-
-        {{ 1 + 2 }} 
-
-        <button ng-click="ctrl.doSomething()">Hi there</button>
-    </div>
-
-    <div class="col-md-3" ng-controller="formController as ctrl">
-        <p ng-repeat="p in ctrl.people">
-            <strong>{{p.name}}</strong> {{p.email}} <cite>{{p.city}}</cite>
-        </p>
+    <div class="col-md-3" ng-controller="movieSearchController as ctrl">
 
         <div class="form-group">
-            <form ng-submit="ctrl.addPerson(ctrl.person)">
-                <label>Name</label>
-                <input type="text" ng-model="ctrl.person.name" class="form-control">
-                <label>City</label>
-                <input type="text" ng-model="ctrl.person.city" class="form-control">
-                <label>E-mail</label>
-                <input type="email" ng-model="ctrl.person.email" class="form-control">
+            <form ng-submit="ctrl.searchMovie(ctrl.person)">
+                <label>Title</label>
+                <input type="text" ng-model="ctrl.searchData.title" class="form-control">
+                <label>Year</label>
+                <input type="text" ng-model="ctrl.searchData.year" class="form-control">
                 <hr/>
                 <input type="submit" class="btn btn-success">
             </form>
         </div>
+
+        <p ng-repeat="movie in ctrl.movies">
+            <strong>{{movie.title}}</strong> ({{movie.year}})
+        </p>
     </div>
 
     <script src="lib/angular.js"></script>

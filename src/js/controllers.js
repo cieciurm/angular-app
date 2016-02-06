@@ -1,43 +1,40 @@
 (function() {
     angular
         .module('myApp')
-        .controller('myController', MyController);
+        .controller('movieSearchController', MovieSearchController);
+
+    function MovieSearchController($http, $log) {
+        var self = this;
+
+        self.movies = [];
+
+        self.searchData = {};
         
-    function MyController() {
-        this.arr = [0, 1, 2, 3];
+        self._init = function() {
+            self._getMovies('batman', null);
 
-        this.doSomething = function() {
-            console.log('hehe');
+            $log.warn('initialize');
         };
+
+        self.searchMovie = function() {
+            self.movies = [];
+
+            self._getMovies(self.searchData.title, self.searchData.year);
+        };
+
+        self._getMovies = function(title, year) {
+            $http.get('http://www.omdbapi.com/?s=' + title + '&y=' + year)
+            .then(function(response) {
+                for(var i = 0; i < response.data.Search.length; i++) {
+                    var movie = response.data.Search[i];
+
+                    self.movies.push({ title: movie.Title, year: movie.Year });
+                }
+            });
+        };
+
+        self._init();
     }
 
-    angular
-        .module('myApp')
-        .controller('formController', FormController);
-
-    function FormController($log) {
-        this.person = {};
-    
-        this.people = [
-            {
-                name: 'mateusz',
-                city: 'warszawa',
-                email: 'something@wp.pl'
-            },
-            {
-                name: 'tymoteusz',
-                city: 'krakow',
-                email: 'hehe@o2.pl'
-            }
-        ];
-
-        this.addPerson = function(person) {
-            $log.warn('uwaga dodaje');
-
-            this.people.push(person);
-            this.person = {};
-        };
-    }
-
-    FormController.$inject = ['$log'];
+    MovieSearchController.$inject = ['$http', '$log'];
 })();
