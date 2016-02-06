@@ -3,7 +3,7 @@
         .module('myApp')
         .controller('movieSearchController', MovieSearchController);
 
-    function MovieSearchController($http, $log) {
+    function MovieSearchController($log, omdbApiService) {
         var self = this;
 
         self.movies = [];
@@ -11,7 +11,7 @@
         self.searchData = {};
         
         self._init = function() {
-            self._getMovies('batman', null);
+            self._getMovies({ title: 'batman' });
 
             $log.warn('initialize');
         };
@@ -19,22 +19,15 @@
         self.searchMovie = function() {
             self.movies = [];
 
-            self._getMovies(self.searchData.title, self.searchData.year);
+            self._getMovies(self.searchData);
         };
 
-        self._getMovies = function(title, year) {
-            $http.get('http://www.omdbapi.com/?s=' + title + '&y=' + year)
-            .then(function(response) {
-                for(var i = 0; i < response.data.Search.length; i++) {
-                    var movie = response.data.Search[i];
-
-                    self.movies.push({ title: movie.Title, year: movie.Year });
-                }
-            });
+        self._getMovies = function(searchData) {
+            self.movies = omdbApiService.listMovies(searchData);
         };
 
         self._init();
     }
 
-    MovieSearchController.$inject = ['$http', '$log'];
+    MovieSearchController.$inject = ['$log', 'omdbApiService'];
 })();
