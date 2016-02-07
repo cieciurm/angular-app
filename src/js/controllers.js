@@ -1,7 +1,8 @@
 (function() {
     angular
         .module('myApp')
-        .controller('movieSearchController', MovieSearchController);
+        .controller('MovieSearchController', MovieSearchController)
+        .controller('MovieDetailsController', MovieDetailsController);
 
     function MovieSearchController($log, omdbApiService) {
         var self = this;
@@ -30,4 +31,18 @@
     }
 
     MovieSearchController.$inject = ['$log', 'omdbApiService'];
+
+    function MovieDetailsController(omdbApiService, $routeParams) {
+        var self = this;
+
+        self.movie = {};
+
+        self.getDetails = function() {
+            self.movie = omdbApiService.getDetails($routeParams.movieId);
+        };
+
+        self.getDetails();
+    }
+
+    MovieDetailsController.$inject = ['omdbApiService', '$routeParams'];
 })();
