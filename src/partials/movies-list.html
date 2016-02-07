@@ -12,6 +12,6 @@
     </div>
 
     <p ng-repeat='movie in ctrl.movies'>
-        <a ng-href='#/movies/{{movie.imdbID}}'><strong>{{movie.title}}</strong> ({{movie.year}})</a>
+        <movie-list-item></movie-list-item>
     </p>
 </div>
