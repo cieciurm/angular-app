@@ -6,13 +6,22 @@
 
     function MovieSearchController($log, omdbApiService) {
         var self = this;
-
         self.movies = [];
-
         self.searchData = {};
         
+        self._searchMovies = function(searchData) {
+            omdbApiService
+                .listMovies(searchData)
+                .then(function(movies) {
+                    self.movies = movies;
+                }, function(error) {
+                    self.movies = [];
+                    $log.log(error);
+                });
+        };
+
         self._init = function() {
-            self._getMovies({ title: 'batman' });
+            self._searchMovies({ title: 'batman' });
 
             $log.warn('initialize');
         };
@@ -20,11 +29,7 @@
         self.searchMovie = function() {
             self.movies = [];
 
-            self._getMovies(self.searchData);
-        };
-
-        self._getMovies = function(searchData) {
-            self.movies = omdbApiService.listMovies(searchData);
+            self._searchMovies(self.searchData);
         };
 
         self._init();
@@ -32,17 +37,22 @@
 
     MovieSearchController.$inject = ['$log', 'omdbApiService'];
 
-    function MovieDetailsController(omdbApiService, $routeParams) {
+    function MovieDetailsController(omdbApiService, $routeParams, $log) {
         var self = this;
-
         self.movie = {};
 
         self.getDetails = function() {
-            self.movie = omdbApiService.getDetails($routeParams.movieId);
+            omdbApiService
+                .getDetails($routeParams.movieId)
+                .then(function(movie) {
+                    self.movie = movie;
+                }, function(error) {
+                    $log.log(error);
+                });
         };
 
         self.getDetails();
     }
 
-    MovieDetailsController.$inject = ['omdbApiService', '$routeParams'];
+    MovieDetailsController.$inject = ['omdbApiService', '$routeParams', '$log'];
 })();

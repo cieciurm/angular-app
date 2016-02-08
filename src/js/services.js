@@ -3,18 +3,21 @@
         .module('myApp')
         .service('omdbApiService', OmdbApiService);
 
-    function OmdbApiService($http) {
+    function OmdbApiService($http, $q) {
         var self = this;
 
         self.listMovies = function(searchData) {
             var movies = [];
+
+            var deferred = $q.defer();
 
             $http
                 .get('http://www.omdbapi.com/?s=' + searchData.title + '&y=' + searchData.year)
                 .then(function(response) {
 
                     if (response.data.Response === "False") {
-                        return movies;
+                        deferred.reject(response.data.Error);
+                        return;
                     }
 
                     for (var i = 0; i < response.data.Search.length; i++) {
@@ -26,31 +29,36 @@
                             imdbID: movie.imdbID
                         });
                     }
+                    deferred.resolve(movies);
                 });
 
-            return movies;
+            return deferred.promise;
         };
 
         self.getDetails = function(id) {
             var movie = {};
+
+            var deferred = $q.defer();
 
             $http
                 .get('http://www.omdbapi.com/?i=' + id)
                 .then(function(response) {
 
                     if (response.data.Response === "False") {
-                        return movie;
+                        deferred.reject(response.data.Error);
+                        return;
                     }
 
                     movie.Title = response.data.Title;
                     movie.Year = response.data.Year;
 
+                    deferred.resolve(movie);
                 });
 
-            return movie;
+            return deferred.promise;
         };
     }
 
-    OmdbApiService.$inject = ['$http'];
+    OmdbApiService.$inject = ['$http', '$q'];
 
 })();
