@@ -11,6 +11,8 @@
         </form>
     </div>
 
+    <div class='alert alert-danger' ng-hide="ctrl.errorMsg == ''">{{ctrl.errorMsg}}</div>
+
     <p ng-repeat='movie in ctrl.movies'>
         <movie-list-item></movie-list-item>
     </p>

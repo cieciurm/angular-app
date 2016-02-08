@@ -8,14 +8,17 @@
         var self = this;
         self.movies = [];
         self.searchData = {};
+        self.errorMsg = '';
         
         self._searchMovies = function(searchData) {
             omdbApiService
                 .listMovies(searchData)
                 .then(function(movies) {
                     self.movies = movies;
+                    self.errorMsg = '';
                 }, function(error) {
                     self.movies = [];
+                    self.errorMsg = error;
                     $log.log(error);
                 });
         };
@@ -40,13 +43,16 @@
     function MovieDetailsController(omdbApiService, $routeParams, $log) {
         var self = this;
         self.movie = {};
+        self.errorMsg = '';
 
         self.getDetails = function() {
             omdbApiService
                 .getDetails($routeParams.movieId)
                 .then(function(movie) {
                     self.movie = movie;
+                    self.errorMsg = '';
                 }, function(error) {
+                    self.errorMsg = error;
                     $log.log(error);
                 });
         };

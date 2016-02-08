@@ -3,6 +3,8 @@
         <a href='#/movies'>Go back</a>
     </p>
 
+    <div class='alert alert-danger' ng-hide="ctrl.errorMsg == ''">{{ctrl.errorMsg}}</div>
+
     <p>
         <strong>{{ctrl.movie.Title}}</strong> ({{ctrl.movie.Year}})
     </p>
