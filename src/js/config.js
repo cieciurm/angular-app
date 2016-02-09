@@ -1,9 +1,9 @@
 (function() {
     angular
         .module('myApp')
-        .config(['$routeProvider', configureRouting]);
+        .config(['$routeProvider', '$locationProvider', configureRouting]);
 
-    function configureRouting($routeProvider) {
+    function configureRouting($routeProvider, $locationProvider) {
 
         $routeProvider.
             when('/movies', {
@@ -19,5 +19,7 @@
             otherwise({
                 redirectTo: '/movies'
             });
+
+        $locationProvider.html5Mode(true);
     }
 })();
